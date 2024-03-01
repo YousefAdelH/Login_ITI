@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/view/layout/home.dart';
+import 'package:flutter_application_1/view/screens/resgister.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -40,6 +41,12 @@ class _LoginState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    const SizedBox(height: 100),
+                    Text(
+                      "Login",
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                    const SizedBox(height: 10),
                     Container(
                       width: 300,
                       child: TextFormField(
@@ -120,17 +127,25 @@ class _LoginState extends State<Login> {
                         ),
                         onPressed: () {
                           if (formkey.currentState!.validate()) {
-                            auth.signInWithEmailAndPassword(
-                                email: _controllerEmail.text,
-                                password: _controllerPassword.text);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return HomeView();
-                                },
-                              ),
-                            );
+                            try {
+                              auth.signInWithEmailAndPassword(
+                                  email: _controllerEmail.text,
+                                  password: _controllerPassword.text);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return HomeView();
+                                  },
+                                ),
+                              );
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == 'user-not-found') {
+                                print('No user found for that email.');
+                              } else if (e.code == 'wrong-password') {
+                                print('Wrong password provided for that user.');
+                              }
+                            }
                           }
                         },
                         child: const Text(
@@ -141,6 +156,24 @@ class _LoginState extends State<Login> {
                     ),
                     SizedBox(
                       height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Already have an account?"),
+                        TextButton(
+                            child: const Text("Register"),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return Signup();
+                                  },
+                                ),
+                              );
+                            }),
+                      ],
                     ),
                   ],
                 ),

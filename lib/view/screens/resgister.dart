@@ -29,172 +29,202 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 100),
-              Text(
-                "Register",
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Create your account",
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 35),
-              TextFormField(
-                controller: _controllerUsername,
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  labelText: "Username",
-                  prefixIcon: const Icon(Icons.person_outline),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                controller: _controllerEmail,
-                focusNode: _focusNodeEmail,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter email.";
-                  } else if (!(value.contains('@') && value.contains('.'))) {
-                    return "Invalid email";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                controller: _controllerPassword,
-                obscureText: _obscurePassword,
-                focusNode: _focusNodePassword,
-                keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  prefixIcon: const Icon(Icons.password_outlined),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
-                      icon: _obscurePassword
-                          ? const Icon(Icons.visibility_outlined)
-                          : const Icon(Icons.visibility_off_outlined)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter password.";
-                  } else if (value.length < 8) {
-                    return "Password must be at least 8 character.";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              TextFormField(
-                controller: _controllerConFirmPassword,
-                obscureText: _obscurePassword,
-                focusNode: _focusNodeConfirmPassword,
-                keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(
-                  labelText: "Confirm Password",
-                  prefixIcon: const Icon(Icons.password_outlined),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
-                      icon: _obscurePassword
-                          ? const Icon(Icons.visibility_outlined)
-                          : const Icon(Icons.visibility_off_outlined)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter password.";
-                  } else if (value != _controllerPassword.text) {
-                    return "Password doesn't match.";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 50),
-              Column(
+      body: Stack(children: [
+        Image.asset(
+          'assets/img/10.jpg', // Replace 'background_image.jpg' with your image asset path
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
+        Center(
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Column(
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                  const SizedBox(height: 100),
+                  Text(
+                    "Register",
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Create your account",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 35),
+                  TextFormField(
+                    controller: _controllerUsername,
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      labelText: "Username",
+                      prefixIcon: const Icon(Icons.person_outline),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        auth.createUserWithEmailAndPassword(
-                            email: _controllerEmail.text,
-                            password: _controllerConFirmPassword.text);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return Login();
-                            },
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text("Register"),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _controllerEmail,
+                    focusNode: _focusNodeEmail,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      prefixIcon: const Icon(Icons.email_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter email.";
+                      } else if (!(value.contains('@') &&
+                          value.contains('.'))) {
+                        return "Invalid email";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _controllerPassword,
+                    obscureText: _obscurePassword,
+                    focusNode: _focusNodePassword,
+                    keyboardType: TextInputType.visiblePassword,
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      prefixIcon: const Icon(Icons.password_outlined),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                          icon: _obscurePassword
+                              ? const Icon(Icons.visibility_outlined)
+                              : const Icon(Icons.visibility_off_outlined)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter password.";
+                      } else if (value.length < 8) {
+                        return "Password must be at least 8 character.";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _controllerConFirmPassword,
+                    obscureText: _obscurePassword,
+                    focusNode: _focusNodeConfirmPassword,
+                    keyboardType: TextInputType.visiblePassword,
+                    decoration: InputDecoration(
+                      labelText: "Confirm Password",
+                      prefixIcon: const Icon(Icons.password_outlined),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                          icon: _obscurePassword
+                              ? const Icon(Icons.visibility_outlined)
+                              : const Icon(Icons.visibility_off_outlined)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter password.";
+                      } else if (value != _controllerPassword.text) {
+                        return "Password doesn't match.";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 50),
+                  Column(
                     children: [
-                      const Text("Already have an account?"),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("Login"),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            try {
+                              auth.createUserWithEmailAndPassword(
+                                  email: _controllerEmail.text,
+                                  password: _controllerConFirmPassword.text);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return Login();
+                                  },
+                                ),
+                              );
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == 'weak-password') {
+                                print('The password provided is too weak.');
+                              } else if (e.code == 'email-already-in-use') {
+                                print(
+                                    'The account already exists for that email.');
+                              }
+                            } catch (e) {
+                              print(e);
+                            }
+                          }
+                        },
+                        child: const Text("Register"),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Already have an account?"),
+                          TextButton(
+                              child: const Text("Login"),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return Login();
+                                    },
+                                  ),
+                                );
+                              }),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
+      ]),
     );
   }
 
