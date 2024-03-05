@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/service/album.dart';
+import 'package:flutter_application_1/service/album_sevice.dart';
 import 'package:flutter_application_1/service/users/users.dart';
 
-class UserProfileScreen extends StatelessWidget {
+class UserProfileScreen extends StatefulWidget {
   final UsersFromApi user;
 
   const UserProfileScreen({Key? key, required this.user}) : super(key: key);
+
+  @override
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  final AlbumsService albumsService = AlbumsService();
 
   @override
   Widget build(BuildContext context) {
@@ -24,28 +33,34 @@ class UserProfileScreen extends StatelessWidget {
             ],
           ),
         ),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 20),
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/img/5.jpg'),
-                backgroundColor: Colors.green,
-                radius: 50,
-              ),
-              SizedBox(height: 20),
-              Text(
-                user.name ?? 'No Name',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                user.email ?? 'No Email',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-            ],
-          ),
+        child: FutureBuilder<List<Album>>(
+          future: albumsService.getAlbumsByUserId(widget.user.id!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              List<Album>? albums = snapshot.data;
+              if (albums != null && albums.isNotEmpty) {
+                print(albums);
+                return ListView.builder(
+                  itemCount: albums.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        albums[index].title!,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      // Add any other album information you want to display
+                    );
+                  },
+                );
+              } else {
+                return Center(child: Text('No albums found'));
+              }
+            }
+          },
         ),
       ),
     );

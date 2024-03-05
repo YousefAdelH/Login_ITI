@@ -15,11 +15,9 @@ class UserService {
         UsersFromApi users = UsersFromApi.fromJson(user);
 
         listUsers.add(users);
-        print(listUsers);
       });
       return listUsers;
     } catch (e) {
-      print("Error: $e");
       throw Exception("Failed to fetch users: $e");
     }
   }
