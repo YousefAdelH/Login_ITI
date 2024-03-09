@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/view/layout/home.dart';
 import 'package:flutter_application_1/view/screens/resgister.dart';
+import 'package:flutter_application_1/view/widget/home_layout.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -125,26 +126,36 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (formkey.currentState!.validate()) {
                             try {
-                              auth.signInWithEmailAndPassword(
-                                  email: _controllerEmail.text,
-                                  password: _controllerPassword.text);
-                              Navigator.push(
+                              await auth.signInWithEmailAndPassword(
+                                email: _controllerEmail.text,
+                                password: _controllerPassword.text,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("login successful!"),
+                              ));
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return HomeView();
+                                    return ChatUser();
                                   },
                                 ),
                               );
                             } on FirebaseAuthException catch (e) {
+                              String errorMessage = 'An error occurred';
                               if (e.code == 'user-not-found') {
-                                print('No user found for that email.');
+                                errorMessage = 'No user found for that email.';
                               } else if (e.code == 'wrong-password') {
-                                print('Wrong password provided for that user.');
+                                errorMessage =
+                                    'Wrong password provided for that user.';
                               }
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(errorMessage)),
+                              );
                             }
                           }
                         },

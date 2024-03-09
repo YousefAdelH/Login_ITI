@@ -11,6 +11,8 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   FirebaseAuth auth = FirebaseAuth.instance;
+   String? errorMessage;
+
 
   final GlobalKey<FormState> _formKey = GlobalKey();
 
@@ -172,28 +174,32 @@ class _SignupState extends State<Signup> {
                           ),
                         ),
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState!.validate()) if (_formKey
+                              .currentState!
+                              .validate()) {
                             try {
-                              auth.createUserWithEmailAndPassword(
-                                  email: _controllerEmail.text,
-                                  password: _controllerConFirmPassword.text);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return Login();
-                                  },
-                                ),
+                              await auth.createUserWithEmailAndPassword(
+                                email: _controllerEmail.text,
+                                password: _controllerPassword.text,
                               );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("signup successful!"),
+                              ));
                             } on FirebaseAuthException catch (e) {
                               if (e.code == 'weak-password') {
-                                print('The password provided is too weak.');
+                                showsnack(context,
+                                    'The password provided is too weak.');
                               } else if (e.code == 'email-already-in-use') {
-                                print(
+                                showsnack(context,
                                     'The account already exists for that email.');
                               }
                             } catch (e) {
-                              print(e);
+                              errorMessage = e.toString();
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(errorMessage!),
+                              ));
                             }
                           }
                         },
@@ -226,6 +232,12 @@ class _SignupState extends State<Signup> {
         ),
       ]),
     );
+  }
+
+  void showsnack(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
   }
 
   @override

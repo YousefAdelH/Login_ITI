@@ -62,9 +62,3 @@ class Chat extends StatelessWidget {
     );
   }
 }
-
-void main() {
-  runApp(MaterialApp(
-    home: Chat(),
-  ));
-}
